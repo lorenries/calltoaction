@@ -56,7 +56,7 @@ p {
 /** Header */
 
 .mdl-layout__header {
-  background-color: #7D287D;
+  background-color: #404041;
   height: auto;
   padding: 1rem;
 }
@@ -201,7 +201,7 @@ label.mdl-textfield__label {
   width: 102%;
   width: calc(100% + 1rem);
   padding: 1rem;
-  background: #7D287D;
+  background: #00B5EF;
   color: #FFF;
   border-radius: 0;
   text-align: center;
@@ -212,13 +212,24 @@ label.mdl-textfield__label {
 }
 
 .call-button:hover {
-  background-color: #5d1d5d;
+  background-color: #0085bc;
 }
 
 .call-button .material-icons {
   margin-right: 2rem;
   font-size: inherit;
   height: auto;
+}
+
+.logo_container {
+  width: 100%;
+}
+
+.logo {
+  width: auto;
+  height: 8rem;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 @media (max-width: 600px) {

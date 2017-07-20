@@ -7,6 +7,7 @@
     "start": "open index.html",
     "people": "node data/download.js",
     "generate-html": "node data/generate-html.js",
+    "get-images": "node data/add-congressman-image-url.js",
     "static": "npm run generate-html",
     "upload-s3": "node data/upload-s3.js"
   },
@@ -33,5 +34,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lachlanjc/calltoaction/issues"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "fs": "0.0.1-security"
   }
 }
