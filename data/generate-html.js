@@ -14,28 +14,28 @@ const Handlebars = require('handlebars')
 const handlebarsTemplateString = fs.readFileSync('./public/representative-card-template.html', 'utf8')
 const template = Handlebars.compile(handlebarsTemplateString);
 
-const govData = JSON.parse(
-  fs.readFileSync('./data/people.json', 'utf8')
+const house = JSON.parse(
+  fs.readFileSync('./data/house.json', 'utf8')
+)
+
+const senate = JSON.parse(
+  fs.readFileSync('./data/senate.json', 'utf8')
 )
 
 // Loop through the government data and start to sort them by
 // state and district.
 let congressByStateAndDistrict = {}
 
-forEach(govData, (person) => {
-  if (!person.current) {
-    console.error(`${person.person.name} is not a current worker in government.`)
-    return
-  }
+forEach(house, (member) => {
 
   // If this isn't a congressman with a district, it is likely a Senator.
   // We don't want to deal with Senator data just yet.
-  if (!person.district) {
-    console.error(`${person.person.name} is not a Congressman.`)
+  if (!member.district) {
+    console.error(`${member.person.name} is not a Congressman.`)
     return
   }
 
-  const district = parseInt(person.district, 10)
+  const district = parseInt(member.district, 10)
   if (isNaN(district)) {
     console.error(`District ${district} is not numeric`)
     return
@@ -50,6 +50,7 @@ forEach(govData, (person) => {
   }
 
   congressByStateAndDistrict[state][district] = person
+
 })
 
 console.log('Finished breaking down congressmen by district and state.')
