@@ -58,36 +58,3 @@ fs.writeFile('./data/people.json', JSON.stringify(people, null, '\t'), err => {
     console.log(`✅ Saved people (${people.length})`)
   }
 });
-
-// forEach(houseMembers, (houseMembers) => {
-
-//   // Not needed since Propublica's API returns all current members.
-//   // if (!person.current) {
-//   //   console.error(`${person.person.name} is not a current worker in government.`)
-//   //   return
-//   // }
-
-//   // If this isn't a congressman with a district, it is likely a Senator.
-//   // We don't want to deal with Senator data just yet.
-//   if (!houseMembers.district) {
-//     console.error(`${houseMembers.first_name} is not a Congressman.`)
-//     return
-//   }
-
-//   const { bioguideid } = houseMembers.id;
-
-//   houseMembers.photos = {
-//     small: `${imgRoot}/${smallImgDimensions}/${bioguideid}.jpg`,
-//     large: `${imgRoot}/${largeImgDimensions}/${bioguideid}.jpg`
-//   }
-
-//   houseMembers.push(members)
-// })
-
-// fs.writeFile('./data/people.json', JSON.stringify(people), err => {
-//   if (err) {
-//     console.error(err)
-//   } else {
-//     console.log(`✅ Saved people (${people.length})`)
-//   }
-// })

@@ -175,7 +175,7 @@ var app = {
 			}
 		}.bind(app);
 
-		request.open('GET', 'http://cdn.usecalltoaction.com/' + state + '-' + districtNum + '.html');
+		request.open('GET', 'https://interactives.wola.org/stopthewall/v2/dist/' + state + '-' + districtNum + '.html');
 
 		request.send(null);
 	},

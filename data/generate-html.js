@@ -15,7 +15,7 @@ const handlebarsTemplateString = fs.readFileSync('./public/representative-card-t
 const template = Handlebars.compile(handlebarsTemplateString);
 
 const house = JSON.parse(
-  fs.readFileSync('./data/house.json', 'utf8')
+  fs.readFileSync('./data/people.json', 'utf8')
 )
 
 const senate = JSON.parse(
@@ -26,22 +26,23 @@ const senate = JSON.parse(
 // state and district.
 let congressByStateAndDistrict = {}
 
-forEach(house, (member) => {
+
+for (i=0; i < house.length; i++) {
 
   // If this isn't a congressman with a district, it is likely a Senator.
   // We don't want to deal with Senator data just yet.
-  if (!member.district) {
-    console.error(`${member.person.name} is not a Congressman.`)
+  if (!house[i].district) {
+    console.error(`${house[i].first_name} is not a Congressman.`)
     return
   }
 
-  const district = parseInt(member.district, 10)
+  const district = parseInt(house[i].district, 10)
   if (isNaN(district)) {
     console.error(`District ${district} is not numeric`)
     return
   }
 
-  const state = person.state
+  const state = house[i].state
 
   // Add this person object to the associated location in the
   // congressByStateAndDistrict object.
@@ -49,41 +50,56 @@ forEach(house, (member) => {
     congressByStateAndDistrict[state] = []
   }
 
-  congressByStateAndDistrict[state][district] = person
+  congressByStateAndDistrict[state][district] = house[i];
 
-})
+  // console.log(congressByStateAndDistrict);
 
-console.log('Finished breaking down congressmen by district and state.')
-console.log('Now attempting to generate static HTML that represents these congressmen')
+// console.log('Finished breaking down congressmen by district and state.')
+// console.log('Now attempting to generate static HTML that represents these congressmen')
+
+  let districtHtml = template({
+    name: `${house[i].first_name} ${house[i].last_name}`,
+    title: "Representative",
+    party: house[i].party,
+    phoneNumber: house[i].phone,
+    imageUrl: house[i].photos.small,
+  });
+
+  const fileName = `${house[i].state}-${house[i].district}.html`
+  fs.writeFileSync(`./dist/members/${fileName}`, districtHtml)
+
+}
+
+
 
 // First create the specific district classes.
-forOwn(congressByStateAndDistrict, (districts, state) => {
-  for (let i = 0; i < districts.length; i++) {
-    if (!districts[i]) {
-      continue
-    }
+// forOwn(congressByStateAndDistrict, (districts, state) => {
+//   for (let i = 0; i < districts.length; i++) {
+//     if (!districts[i]) {
+//       continue
+//     }
 
-    const person = districts[i]
+//     const person = districts[i]
 
-    const fieldsToReplaceMap = {
-      '<District />': person.description,
-      '<Congressman />': `${person.person.firstname} ${person.person.lastname}`,
-      '<Party />': person.party,
-      '<Phone />': person.phone
-    }
+//     const fieldsToReplaceMap = {
+//       '<District />': person.description,
+//       '<Congressman />': `${house[i].first_name} ${house[i].last_name}`,
+//       '<Party />': house[i].party,
+//       '<Phone />': house[i].phone
+//     }
 
-    let districtHtml = template({
-      name: `${person.person.firstname} ${person.person.lastname}`,
-      title: person.description,
-      party: person.party,
-      phoneNumber: person.phone,
-      imageUrl: person.photos.small,
-    });
+//     let districtHtml = template({
+//       name: `${house[i].first_name} ${house[i].last_name}`,
+//       title: "Representative",
+//       party: house[i].party,
+//       phoneNumber: house[i].phone,
+//       imageUrl: house[i].photos.small,
+//     });
 
-    console.log(districtHtml);
+//     // console.log(districtHtml);
 
-    const fileName = `${state}-${i}.html`
-    fs.writeFileSync(`./dist/${fileName}`, districtHtml)
-  }
-})
+//     const fileName = `${house[i].state}-${house[i].district}.html`
+//     fs.writeFileSync(`./dist/${fileName}`, districtHtml)
+//   }
+// })
 

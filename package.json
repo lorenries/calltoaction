@@ -9,7 +9,8 @@
     "generate-html": "node data/generate-html.js",
     "get-images": "node data/add-congressman-image-url.js",
     "static": "npm run generate-html",
-    "upload-s3": "node data/upload-s3.js"
+    "upload-s3": "node data/upload-s3.js",
+    "build": "rm -rf dist/* && mkdir dist/members && npm run generate-html && mkdir dist/assets && cp -r assets/* dist/assets/ && cp index.html dist/index.html && cp scripts.js dist/scripts.js"
   },
   "keywords": [
     "politics"
