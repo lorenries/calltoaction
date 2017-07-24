@@ -7,25 +7,34 @@
  *  2. A district page that displays all the congressmen in that
  *     district (typically based on full address).
  */
-const fs = require('fs')
-const forEach = require('lodash/forEach')
-const forOwn = require('lodash/forOwn')
-const Handlebars = require('handlebars')
-const handlebarsTemplateString = fs.readFileSync('./public/representative-card-template.html', 'utf8')
-const template = Handlebars.compile(handlebarsTemplateString);
+ const fs = require('fs')
+ const forEach = require('lodash/forEach')
+ const forOwn = require('lodash/forOwn')
+ const Handlebars = require('handlebars')
+ const handlebarsTemplateString = fs.readFileSync('./public/representative-card-template.html', 'utf8')
+ const template = Handlebars.compile(handlebarsTemplateString);
 
-const house = JSON.parse(
+ const house = JSON.parse(
   fs.readFileSync('./data/people.json', 'utf8')
-)
+  )
 
-const senate = JSON.parse(
+ const senate = JSON.parse(
   fs.readFileSync('./data/senate.json', 'utf8')
-)
+  )
+
+ const statesHash= JSON.parse(
+  fs.readFileSync('./data/states_hash.json', 'utf8')
+  )
 
 // Loop through the government data and start to sort them by
 // state and district.
 let congressByStateAndDistrict = {}
 
+function getOrdinal(n) {
+  var s=["th","st","nd","rd"],
+  v=n%100;
+  return n+(s[(v-20)%10]||s[v]||s[0]);
+}
 
 for (i=0; i < house.length; i++) {
 
@@ -44,6 +53,8 @@ for (i=0; i < house.length; i++) {
 
   const state = house[i].state
 
+  const stateVerbose = statesHash[state];
+
   // Add this person object to the associated location in the
   // congressByStateAndDistrict object.
   if (!congressByStateAndDistrict[state]) {
@@ -52,54 +63,28 @@ for (i=0; i < house.length; i++) {
 
   congressByStateAndDistrict[state][district] = house[i];
 
-  // console.log(congressByStateAndDistrict);
 
-// console.log('Finished breaking down congressmen by district and state.')
-// console.log('Now attempting to generate static HTML that represents these congressmen')
+  let partyName = house[i].party;
+
+  if (house[i].party == 'D') {
+    partyName = 'Democrat';
+  } else if (house[i].party == 'R') {
+    partyName = 'Republican';
+  } else if (house[i].party == 'R') {
+    partyName = 'Independent';
+  }
+
+  let districtNumber = getOrdinal(house[i].district);
 
   let districtHtml = template({
     name: `${house[i].first_name} ${house[i].last_name}`,
-    title: "Representative",
-    party: house[i].party,
+    title: `Representative for ${stateVerbose}'s ${districtNumber} Congressional District.`,
+    party: partyName,
     phoneNumber: house[i].phone,
     imageUrl: house[i].photos.small,
   });
 
   const fileName = `${house[i].state}-${house[i].district}.html`
-  fs.writeFileSync(`./dist/members/${fileName}`, districtHtml)
+  fs.writeFileSync(`./dist/templates/${fileName}`, districtHtml)
 
 }
-
-
-
-// First create the specific district classes.
-// forOwn(congressByStateAndDistrict, (districts, state) => {
-//   for (let i = 0; i < districts.length; i++) {
-//     if (!districts[i]) {
-//       continue
-//     }
-
-//     const person = districts[i]
-
-//     const fieldsToReplaceMap = {
-//       '<District />': person.description,
-//       '<Congressman />': `${house[i].first_name} ${house[i].last_name}`,
-//       '<Party />': house[i].party,
-//       '<Phone />': house[i].phone
-//     }
-
-//     let districtHtml = template({
-//       name: `${house[i].first_name} ${house[i].last_name}`,
-//       title: "Representative",
-//       party: house[i].party,
-//       phoneNumber: house[i].phone,
-//       imageUrl: house[i].photos.small,
-//     });
-
-//     // console.log(districtHtml);
-
-//     const fileName = `${house[i].state}-${house[i].district}.html`
-//     fs.writeFileSync(`./dist/${fileName}`, districtHtml)
-//   }
-// })
-

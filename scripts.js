@@ -1,3 +1,5 @@
+var pymChild = new pym.Child();
+
 var app = {
 
 	addressInput: document.getElementsByClassName('input-address')[0],
@@ -175,7 +177,7 @@ var app = {
 			}
 		}.bind(app);
 
-		request.open('GET', 'https://interactives.wola.org/stopthewall/v2/dist/' + state + '-' + districtNum + '.html');
+		request.open('GET', 'https://interactives.wola.org/stopthewall/v2/templates/' + state + '-' + districtNum + '.html');
 
 		request.send(null);
 	},
@@ -198,6 +200,10 @@ var app = {
 		repCardList.innerHTML = templateString;
 
 		this._bindCallButtonClick(repCardList.getElementsByClassName('call-button')[0]);
+
+		pymChild.sendHeight();
+
+		console.log('rendered');
 	},
 
 	_bindCallButtonClick: function(element) {
